@@ -10,7 +10,11 @@ import {
 } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { Analytics } from "@vercel/analytics/next"
+import { init } from '@plausible-analytics/tracker'
+
+init({
+  domain: 'formyprincessruqi.vercel.app'
+})
 
 const queryClient = new QueryClient();
 
