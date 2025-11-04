@@ -1,0 +1,195 @@
+/* Base animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes reveal-flash {
+  0% { opacity: 0; }
+  20% { opacity: 0.4; }
+  35% { opacity: 0.35; }
+  65% { opacity: 0.2; }
+  100% { opacity: 0; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Enhanced sparkle effect */
+@keyframes sparkle-pop {
+  0% { 
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+/* Countdown section specific styles */
+.countdown-section {
+  position: relative;
+  background: linear-gradient(135deg, #fff5f7 0%, #fce7f3 50%, #fff5f7 100%);
+  overflow: hidden;
+}
+
+/* Floating background elements */
+.floating-element {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Time unit cards */
+.time-unit-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  transition: all 0.3s ease;
+}
+
+.time-unit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(244, 114, 182, 0.3);
+}
+
+/* Glowing effects */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #f472b6, #fb7185, #f472b6);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect:hover::before {
+  opacity: 1;
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+/* Reveal animation effects */
+.reveal-bg-flash {
+  position: relative;
+}
+
+.reveal-bg-flash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.8), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  animation: reveal-flash 3s ease-out forwards;
+}
+
+/* Sparkle particles */
+.sparkle-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at 30% 30%, #fff, rgba(255,182,193,0.8));
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkle-pop 1s ease-out forwards;
+}
+
+/* Button animations */
+.magic-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.magic-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+/* Number transition effect */
+.number-transition {
+  transition: all 0.3s ease;
+}
+
+.number-transition.changing {
+  transform: scale(1.1);
+  color: #f472b6;
+}
+
+/* Enhanced background effect */
+.enhanced-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+    rgba(252,231,243,0.8) 0%,
+    rgba(255,245,247,0.5) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+/* Clock icon animation */
+.clock-spin {
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .time-unit-card {
+    padding: 1rem;
+  }
+  
+  .floating-element {
+    display: none;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

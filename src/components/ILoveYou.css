@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;500;700&family=Great+Vibes&display=swap');
+
+.font-elegant {
+  font-family: 'Great Vibes', 'Dancing Script', cursive;
+}
+
+.font-cursive {
+  font-family: 'Dancing Script', cursive;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 8s linear infinite;
+}
+
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-aurora {
+  animation: aurora 15s ease infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  35% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.05);
+  }
+  55% {
+    transform: scale(1);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Embedded iframe overlay transitions */
+.embed-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  background: rgba(0,0,0,0);
+  opacity: 0;
+  transform: scale(0.995);
+  pointer-events: none;
+  transition: opacity 600ms cubic-bezier(.2,.9,.2,1), transform 600ms cubic-bezier(.2,.9,.2,1), background 600ms ease;
+}
+
+.embed-overlay.embed-active {
+  background: rgba(0,0,0,0.8);
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.embed-iframe {
+  width: 92%;
+  height: 92%;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  transform: scale(0.99);
+  opacity: 0;
+  transition: transform 600ms cubic-bezier(.2,.9,.2,1), opacity 600ms cubic-bezier(.2,.9,.2,1);
+}
+
+.embed-overlay.embed-active .embed-iframe {
+  transform: scale(1);
+  opacity: 1;
+}

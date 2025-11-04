@@ -1,0 +1,265 @@
+/* Enhanced Animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg); 
+    filter: brightness(1);
+  }
+  25% { 
+    transform: translate(5px, -10px) rotate(2deg); 
+    filter: brightness(1.1);
+  }
+  75% { 
+    transform: translate(-5px, -5px) rotate(-2deg);
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.05);
+    filter: blur(0.5px);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0.4; 
+    transform: scale(0.8) rotate(0deg);
+    filter: blur(1px);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.1) rotate(180deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes ambient-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(244, 114, 182, 0.2),
+      0 0 40px rgba(244, 114, 182, 0.1),
+      inset 0 0 15px rgba(244, 114, 182, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(244, 114, 182, 0.3),
+      0 0 60px rgba(244, 114, 182, 0.2),
+      inset 0 0 25px rgba(244, 114, 182, 0.2);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+}
+
+@keyframes shimmer-wave {
+  0% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+/* Enhanced Countdown Section */
+.countdown-section {
+  position: relative;
+  background: linear-gradient(135deg, 
+    rgba(255, 245, 247, 0.9) 0%, 
+    rgba(252, 231, 243, 0.95) 50%, 
+    rgba(255, 245, 247, 0.9) 100%
+  );
+  overflow: hidden;
+}
+
+/* Time Unit Cards */
+.time-unit-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(244, 114, 182, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(244, 114, 182, 0.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ambient-glow 3s ease-in-out infinite;
+}
+
+.time-unit-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(244, 114, 182, 0.5);
+  box-shadow: 
+    0 15px 40px rgba(244, 114, 182, 0.2),
+    0 5px 15px rgba(244, 114, 182, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(244, 114, 182, 0.2);
+}
+
+/* Enhanced Number Display */
+.number-display {
+  background: linear-gradient(120deg, #f472b6, #fb7185, #f472b6);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-wave 3s linear infinite;
+  text-shadow: 
+    0 0 20px rgba(244, 114, 182, 0.5),
+    0 0 40px rgba(244, 114, 182, 0.3);
+}
+
+/* Magic Button */
+.magic-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.magic-button::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, 
+    rgba(244, 114, 182, 0.6), 
+    rgba(251, 113, 133, 0.6),
+    rgba(244, 114, 182, 0.6)
+  );
+  filter: blur(8px);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.magic-button:hover::before {
+  opacity: 1;
+}
+
+.magic-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%) rotate(45deg);
+  transition: transform 0.5s ease;
+}
+
+.magic-button:hover::after {
+  transform: translateX(100%) rotate(45deg);
+}
+
+/* Title Enhancement */
+.romantic-title {
+  background: linear-gradient(120deg, 
+    #f472b6 0%, 
+    #fb7185 45%, 
+    #f472b6 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-wave 3s linear infinite;
+  text-shadow: 
+    0 0 30px rgba(244, 114, 182, 0.3),
+    0 0 60px rgba(244, 114, 182, 0.2);
+}
+
+/* Ambient Background */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(252, 231, 243, 0.8) 0%,
+      rgba(255, 245, 247, 0.5) 30%,
+      transparent 70%
+    );
+  pointer-events: none;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  mix-blend-mode: overlay;
+}
+
+/* Enhanced Sparkles */
+.enhanced-sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  filter: blur(0.5px);
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.enhanced-sparkle::before,
+.enhanced-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.5;
+}
+
+.enhanced-sparkle::before {
+  transform: translate(-150%, -150%) scale(0.8);
+  animation: twinkle 2s ease-in-out infinite 0.3s;
+}
+
+.enhanced-sparkle::after {
+  transform: translate(150%, 150%) scale(0.6);
+  animation: twinkle 2s ease-in-out infinite 0.6s;
+}
+
+/* Heart Beat Animation */
+.heart-beat {
+  animation: heartbeat 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .time-unit-card {
+    padding: 1rem;
+  }
+  
+  .number-display {
+    font-size: 2.5rem;
+  }
+  
+  .ambient-bg {
+    opacity: 0.4;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .time-unit-card,
+  .magic-button {
+    box-shadow: 
+      0 4px 12px rgba(244, 114, 182, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  }
+}

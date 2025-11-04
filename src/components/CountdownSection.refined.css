@@ -1,0 +1,708 @@
+/* Base Theme Transitions */
+.countdown-section {
+  transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  background: linear-gradient(45deg, 
+    #ffb7c5 0%,
+    #ffc9d6 25%,
+    #ffdbe5 50%,
+    #ffe4e1 75%,
+    #ffb7c5 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  perspective: 1000px;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Anticipation Theme */
+.anticipation-theme {
+  background: linear-gradient(-45deg,
+    #ffb7c5,
+    #ffc0cb,
+    #ffdab9,
+    #ffe4e1
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+.anticipation-theme .time-unit-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(244, 114, 182, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.anticipation-theme .number-display {
+  background: linear-gradient(120deg, 
+    rgba(244, 114, 182, 0.9),
+    rgba(251, 113, 133, 0.9)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(244, 114, 182, 0.2);
+}
+
+/* Ensure number-display can host a shimmer pseudo-element */
+.number-display {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- Original Celebration Theme (kept and merged) --- */
+
+/* Celebration Theme */
+.celebration-theme {
+  background: linear-gradient(-45deg,
+    #ff69b4,
+    #ffb6c1,
+    #ffc0cb,
+    #ffb7c5
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+/* original gradient animation kept for fallback */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* keep existing ::before glow behavior */
+.celebration-theme::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
+  animation: glowPulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* --- Keep original time/unit card, number display, animations --- */
+.celebration-theme .time-unit-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  box-shadow:
+    0 12px 36px rgba(225, 29, 72, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    0 0 20px rgba(225, 29, 72, 0.2);
+}
+
+.celebration-theme .number-display {
+  background: linear-gradient(120deg,
+    #be123c,
+    #e11d48,
+    #be123c
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-wave 3s linear infinite;
+}
+
+@keyframes shimmer-wave {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translate(5px, -10px) rotate(2deg);
+    filter: brightness(1.1);
+  }
+  75% {
+    transform: translate(-5px, -5px) rotate(-2deg);
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes heartbeat-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@keyframes sparkle-drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(10px, -10px) rotate(90deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(20px, 0) rotate(180deg);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(10px, 10px) rotate(270deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Ambient Elements */
+.floating-element {
+  animation: gentle-float 6s infinite;
+}
+
+.celebration-theme .floating-element {
+  animation-duration: 5s;
+  filter: brightness(1.2);
+}
+
+/* Button States */
+.magic-button {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.anticipation-theme .magic-button {
+  background: rgba(244, 114, 182, 0.5);
+  box-shadow:
+    0 4px 12px rgba(244, 114, 182, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.celebration-theme .magic-button {
+  background: linear-gradient(120deg,
+    #ec4848,
+    #f472b6,
+    #e4ec48
+  );
+  box-shadow:
+    0 8px 24px rgba(244, 114, 182, 0.3),
+    0 0 40px rgba(244, 114, 182, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+.celebration-theme .magic-button::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg,
+    rgba(244, 114, 182, 0.6),
+    rgba(236, 72, 153, 0.6)
+  );
+  border-radius: inherit;
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.celebration-theme .magic-button:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Sparkles */
+.enhanced-sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  filter: blur(0.5px);
+}
+
+.celebration-theme .enhanced-sparkle {
+  filter: blur(1px) brightness(1.2);
+  box-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
+}
+
+/* Text Effects (original) */
+.romantic-title {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.anticipation-theme .romantic-title {
+  color: #f472b6;
+  text-shadow:
+    0 0 6px rgba(244, 114, 182, 0.4),
+    0 0 12px rgba(244, 114, 182, 0.3),
+    0 0 18px rgba(244, 114, 182, 0.2);
+  filter: none;
+}
+
+.celebration-theme .romantic-title {
+  background: linear-gradient(
+    120deg,
+    #ff4d6d,
+    #ff0054,
+    #d1003f
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Keep the stacking rules you added to protect rasterization */
+.countdown-section .bokeh-layer,
+.countdown-section .petal-overlay,
+.countdown-section .radial-rays,
+.countdown-section .radial-rays::before,
+.countdown-section .outer-burst,
+.countdown-section .middle-ring,
+.countdown-section .inner-pulse {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.countdown-section .max-w-4xl,
+.countdown-section .romantic-title,
+.countdown-section .romantic-text {
+  position: relative;
+  z-index: 9999; /* bring main textual content above all decorative layers */
+  filter: none !important; /* ensure no blur/filter affects title text */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  isolation: isolate;
+  will-change: transform, filter, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  perspective: 1000;
+}
+
+.outer-burst,
+.middle-ring,
+.inner-pulse {
+  z-index: 0 !important;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* Debug helper: */
+.countdown-section.no-blur-overlays .bokeh-layer,
+.countdown-section.no-blur-overlays .petal-overlay,
+.countdown-section.no-blur-overlays .radial-rays::before,
+.countdown-section.no-blur-overlays .outer-burst,
+.countdown-section.no-blur-overlays .middle-ring,
+.countdown-section.no-blur-overlays .inner-pulse,
+.countdown-section.no-blur-overlays .magic-button::before,
+.countdown-section.no-blur-overlays .time-unit-card {
+  filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 0.95;
+}
+
+/* --- Original additions: bokeh, heartbeat, petal overlay, orbit, radial rays --- */
+
+/* Heartbeat for numbers (anticipation) */
+.anticipation-theme .number-display {
+  animation: heartbeat-pulse 2.2s ease-in-out infinite;
+}
+
+/* Slow golden shimmer every ~5s */
+.anticipation-theme .number-display::after,
+.celebration-theme .number-display::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,240,200,0.15) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-120%);
+  animation: number-shimmer 5s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+@keyframes number-shimmer {
+  0% { transform: translateX(-120%); opacity: 0; }
+  8% { opacity: 1; }
+  30% { transform: translateX(120%); opacity: 0.6; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+/* Bokeh backdrop for dreamy depth */
+.bokeh-layer {
+  position: absolute;
+  inset: -10%;
+  pointer-events: none;
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.3) 0%, transparent 25%),
+    radial-gradient(circle at 80% 30%, rgba(255, 182, 193, 0.4) 0%, transparent 25%),
+    radial-gradient(circle at 40% 70%, rgba(255, 192, 203, 0.3) 0%, transparent 25%),
+    radial-gradient(circle at 70% 60%, rgba(255, 228, 225, 0.4) 0%, transparent 25%),
+                    radial-gradient(circle at 80% 30%, rgba(255,245,235,0.20) 0%, transparent 18%),
+                    radial-gradient(circle at 50% 80%, rgba(255,238,245,0.18) 0%, transparent 22%);
+  filter: blur(30px) saturate(0.95);
+  opacity: 0.6;
+  transition: opacity 1s ease;
+}
+
+.celebration-theme .bokeh-layer {
+  opacity: 0.9;
+  filter: blur(20px) saturate(1.05) brightness(1.05);
+}
+
+/* Petal overlay (optional, subtle) */
+.petal-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url('/petal-overlay.svg');
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.celebration-theme .petal-overlay {
+  opacity: 0.28;
+  animation: petal-drift 12s linear infinite;
+}
+
+@keyframes petal-drift {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-24px) rotate(6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Light-ray radial burst centered (celebration) */
+.radial-rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.radial-rays::before {
+  content: '';
+  width: 10%;
+  height: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,240,200,0.45), rgba(255,200,180,0.06) 40%, transparent 60%);
+  filter: blur(24px);
+  opacity: 0;
+  transform: scale(0.9);
+  animation: radial-pulse 1.4s ease-out 1 forwards;
+}
+
+@keyframes radial-pulse {
+  0% { opacity: 0; transform: scale(0.9); }
+  60% { opacity: 0.8; transform: scale(2.6); }
+  100% { opacity: 0.35; transform: scale(3.6); }
+}
+
+/* Button sparkle orbit */
+.magic-button .orbit-sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255,240,200,0.9);
+  top: 50%;
+  left: 50%;
+  transform-origin: -60px center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.celebration-theme .magic-button .orbit-sparkle {
+  opacity: 1;
+  animation: orbit 3s linear infinite;
+}
+
+@keyframes orbit {
+  0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  50% { transform: rotate(180deg) translateX(60px) rotate(-180deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+/* Hover shimmer trail across button text (short-lived) */
+.magic-button .hover-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 45%, rgba(255,255,255,0.18) 55%, transparent 100%);
+  transform: translateX(-120%);
+}
+
+.magic-button:hover .hover-shimmer {
+  animation: hover-shimmer 0.9s ease-out 1;
+}
+
+@keyframes hover-shimmer {
+  0% { transform: translateX(-120%); opacity: 0; }
+  20% { opacity: 1; }
+  60% { transform: translateX(120%); opacity: 1; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+/* Disabled button breathing in anticipation */
+.anticipation-theme .magic-button[disabled] {
+  animation: button-breathe 2.6s ease-in-out infinite;
+  box-shadow: 0 6px 18px rgba(244,114,182,0.12);
+}
+
+@keyframes button-breathe {
+  0% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(244,114,182,0.05)); }
+  50% { transform: scale(1.03); filter: drop-shadow(0 0 18px rgba(244,114,182,0.12)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(244,114,182,0.05)); }
+}
+
+/* Text sparkle rotation for celebration title */
+.celebration-theme .title-sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: title-sparkle-rotate 12s linear infinite;
+}
+
+@keyframes title-sparkle-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* --- ROMANTIC CINEMATIC OVERRIDES & ADDITIONS --- */
+
+/* cinematic gradient override (soft, warm) */
+.celebration-theme.cinematic {
+  background: radial-gradient(circle at 30% 20%, #ffafcc 0%, #ffc8dd 25%, #ffd6e0 50%, #fff0f5 100%);
+  background-size: 400% 400%;
+  animation: cinematicGradient 18s ease infinite;
+}
+
+/* keep fallback animation name */
+@keyframes cinematicGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* cinematic bokeh hearts container (gentle hearts / circles) */
+.cinematic-bokeh {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* bokeh pieces created as circles; use nth-child sizing and timing variations */
+.cinematic-bokeh span {
+  position: absolute;
+  display: block;
+  background: radial-gradient(circle, rgba(255,192,203,0.86) 0%, rgba(255,182,193,0.25) 60%, transparent 100%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  animation: floatHearts 12s linear infinite;
+  filter: blur(2px) saturate(1.05);
+  opacity: 0.6;
+  mix-blend-mode: screen;
+}
+.cinematic-bokeh span:nth-child(2n) {
+  background: radial-gradient(circle, rgba(255,240,245,0.86), transparent 80%);
+  width: 16px;
+  height: 16px;
+  animation-duration: 16s;
+  opacity: 0.55;
+}
+.cinematic-bokeh span:nth-child(3n) {
+  width: 28px;
+  height: 28px;
+  animation-duration: 20s;
+  opacity: 0.45;
+}
+.cinematic-bokeh span:nth-child(5n) {
+  background: radial-gradient(circle, rgba(255,230,210,0.85), transparent 80%);
+  width: 30px;
+  height: 30px;
+  animation-duration: 22s;
+  opacity: 0.4;
+}
+
+@keyframes floatHearts {
+  0% { transform: translateY(120%) scale(0.8) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.7; }
+  50% { transform: translateY(-10%) scale(1.05) rotate(12deg); opacity: 0.8; }
+  80% { opacity: 0.35; }
+  100% { transform: translateY(-140%) scale(0.7) rotate(45deg); opacity: 0; }
+}
+
+/* Ensure bokeh sits behind text but above base background */
+.celebration-theme .cinematic-bokeh { z-index: 2; }
+
+
+
+.celebration-theme.cinematic .cinematic-bokeh {
+  opacity: 0.48; /* slightly reduce bokeh intensity when cinematic celebration active */
+  filter: blur(12px) contrast(0.9) saturate(0.95);
+}
+
+.celebration-theme .cinematic-bokeh {
+  opacity: 0.28 !important; /* reduce bokeh intensity in celebration state for clearer text */
+  filter: blur(10px) contrast(0.86) saturate(0.9);
+}
+
+/* Make the celebration title text more prominent */
+.celebration-title-main {
+  display: block;
+  font-weight: 900;
+  background: linear-gradient(90deg, #FFD700 0%, #FF8C69 40%, #FF3B8B 70%, #FF1493 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.6));
+}
+
+.celebration-title-sub {
+  display: block;
+  font-weight: 800;
+  background: linear-gradient(90deg, #FF1493 0%, #FF69B4 45%, #FFB6C1 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 16px rgba(255, 105, 180, 0.5));
+}
+
+/* Keep emojis in title in their original colorful glyph form */
+.celebration-emoji {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: initial !important;
+  -webkit-text-fill-color: initial !important;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+  display: inline-block;
+  margin-left: 0.25rem;
+  margin-right: 0.15rem;
+}
+
+/* stronger, cinematic romantic title overrides — keep readable on pink backgrounds */
+.celebration-theme .romantic-title {
+  position: relative;
+  z-index: 6; /* above cinematic bokeh & glow layers */
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  will-change: transform, filter, opacity;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+/* richer gradient + multi-layered glow for cinematic title */
+.celebration-theme .romantic-title {
+  background: linear-gradient(90deg, #ffd700 0%, #ff9ecd 45%, #ff69b4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow:
+    0 0 18px rgba(255, 200, 230, 0.9),
+    0 0 40px rgba(255, 150, 200, 0.6),
+    0 0 80px rgba(255, 110, 180, 0.35);
+  filter: drop-shadow(0 0 24px rgba(255, 150, 200, 0.6));
+  animation: softGlow 6s ease-in-out infinite;
+}
+
+/* Specific celebration title span styles used by CelebrationTitle.tsx */
+.celebration-title-main {
+  background: linear-gradient(90deg, #ff0000, #ff0000, #ff0000);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(255,182,193,0.85);
+  filter: drop-shadow(0 0 36px rgba(255,105,180,0.5));
+}
+
+.celebration-title-sub {
+  background: linear-gradient(90deg, #ff0080, #ff0026, #ff003c, #ff0055);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 24px rgba(255,182,193,0.8);
+  filter: drop-shadow(0 0 28px rgba(255,105,180,0.45));
+}
+
+/* subtle 'shine' overlay to traverse text */
+.celebration-theme .romantic-title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0) 55%);
+  transform: translateX(-120%);
+  mix-blend-mode: screen;
+  animation: titleShimmer 6s linear infinite;
+  z-index: 7;
+  opacity: 0.9;
+}
+
+@keyframes titleShimmer {
+  0% { transform: translateX(-120%); opacity: 0; }
+  8% { opacity: 1; }
+  40% { transform: translateX(120%); opacity: 0.6; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+@keyframes softGlow {
+  0%, 100% { filter: drop-shadow(0 0 18px rgba(255,200,230,0.4)); }
+  50% { filter: drop-shadow(0 0 38px rgba(255,120,185,0.65)); }
+}
+
+/* scale-friendly responsive sizes for the cinematic heading (if you use inline sizes in TSX, they will apply) */
+.celebration-theme .romantic-title.block { display: block; }
+
+/* small helper for the inline spans to keep clip-text working across browsers */
+.bg-clip-text { -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Keep accessibility preference honored: remove animation on reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-bokeh span, .celebration-theme .romantic-title::after, .celebration-theme .romantic-title {
+    animation: none !important;
+    transition: none !important;
+  }
+}

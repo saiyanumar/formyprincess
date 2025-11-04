@@ -1,0 +1,56 @@
+/* Optimized animation containers */
+.animation-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+}
+
+/* Hardware acceleration for time units */
+.time-unit-card {
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+}
+
+/* Optimize floating elements container */
+.floating-elements-container {
+  transform: translateZ(0);
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Optimize individual floating elements */
+.floating-element {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Optimize gradient animations */
+.animated-gradient {
+  transform: translateZ(0);
+  will-change: background-position;
+  backface-visibility: hidden;
+}
+
+/* Optimize text animations */
+.animated-text {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Optimize glow effects */
+.glow-effect {
+  transform: translateZ(0);
+  will-change: opacity, filter;
+  backface-visibility: hidden;
+}
+
+/* Force GPU rendering for smoother animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}

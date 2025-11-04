@@ -1,0 +1,39 @@
+/* Background animations */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% -200%; }
+  100% { background-position: 200% 200%; }
+}
+
+/* Enhanced bokeh effect */
+.bokeh-layer {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255,192,203,0.4) 0%, transparent 30%),
+    radial-gradient(circle at 80% 30%, rgba(255,218,224,0.3) 0%, transparent 25%),
+    radial-gradient(circle at 40% 70%, rgba(255,182,193,0.35) 0%, transparent 28%),
+    radial-gradient(circle at 70% 60%, rgba(255,228,225,0.3) 0%, transparent 20%);
+  filter: blur(40px);
+  opacity: 0.8;
+  mix-blend-mode: screen;
+}
+
+/* Celebration theme enhancements */
+.celebration-theme .bokeh-layer {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255,192,203,0.5) 0%, transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(255,218,224,0.4) 0%, transparent 30%),
+    radial-gradient(circle at 40% 70%, rgba(255,182,193,0.45) 0%, transparent 32%),
+    radial-gradient(circle at 70% 60%, rgba(255,228,225,0.4) 0%, transparent 25%);
+  opacity: 0.9;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; filter: blur(40px); }
+  50% { opacity: 0.9; filter: blur(35px); }
+}

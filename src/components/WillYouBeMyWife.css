@@ -1,0 +1,110 @@
+/* Styles for WillYouBeMyWife component */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;500;700&display=swap');
+
+/* Base animations */
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 0.75rem rgba(244, 63, 94, 0.3)); }
+  50% { filter: drop-shadow(0 0 1.5rem rgba(244, 63, 94, 0.5)); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(5px, -5px); }
+  50% { transform: translate(-5px, -10px); }
+  75% { transform: translate(-8px, -2px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(8px, -8px); }
+  50% { transform: translate(-5px, -15px); }
+  75% { transform: translate(-12px, -4px); }
+}
+
+/* Utility classes */
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+/* Base styles */
+.wy-proposal-root {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff6f7 0%, #fff0ef 28%, #ffe9e8 60%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b2135;
+}
+
+.wy-rosegold {
+  background: radial-gradient(1200px 500px at 50% 10%, #fff7f5 0%, #ffe9e6 10%, #fff0ef 20%), linear-gradient(135deg, #ffd7d2 0%, #ffe4d9 100%);
+}
+
+.wy-bokeh-layer {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 20%, rgba(255,231,235,0.12) 0%, transparent 10%), radial-gradient(circle at 80% 80%, rgba(255,242,230,0.08) 0%, transparent 12%);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.wy-glow-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255,220,225,0.12), transparent 35%);
+  mix-blend-mode: screen;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.wy-orbit-container { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:1; }
+.proposal-orbit { position:absolute; font-family: 'Playfair Display', serif; font-size:28px; color:rgba(255,255,255,0.06); letter-spacing:1px; text-shadow: 0 6px 18px rgba(255,180,190,0.05); }
+
+.wy-content { position:relative; z-index:10; }
+.wy-line { margin-top:12px; }
+.wy-line-text { display:inline-block; font-family: 'Dancing Script', 'Playfair Display', serif; font-size:40px; color:#5c1f36; text-shadow:0 10px 30px rgba(92,31,54,0.06); line-height:1.05; }
+.wy-question-line .wy-line-text { font-size:56px; font-weight:700; letter-spacing:0.4px; }
+.wy-question { position:relative; display:inline-block; padding: 10px 18px; border-radius:18px; }
+.wy-question::after { content: ''; position:absolute; inset:-8px; border-radius:28px; box-shadow: 0 0 38px rgba(255,180,195,0.34); z-index:-1; }
+
+/* soft ring glow for the question line */
+.wy-question::before { content: ''; position:absolute; left:-20px; right:-20px; top:-14px; bottom:-14px; border-radius:36px; box-shadow: 0 0 44px rgba(255,176,190,0.16); z-index:-2; }
+
+.wy-buttons { display:flex; gap:14px; justify-content:center; }
+.wy-btn { padding:12px 20px; border-radius:14px; border: none; font-family: 'Poppins', sans-serif; cursor:pointer; box-shadow:0 6px 22px rgba(107,33,53,0.06); transition: transform .18s ease, box-shadow .18s ease; }
+.wy-btn:focus{ outline:none; }
+.wy-btn-yes { background: linear-gradient(90deg,#ffb3c0,#ffd6c9); color:#6b2135; font-weight:600; }
+.wy-btn-think { background: #fff; color:#6b2135; border:1px solid rgba(107,33,53,0.06); }
+.wy-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(107,33,53,0.12); }
+.wy-btn-yes:hover { box-shadow: 0 14px 42px rgba(255,160,170,0.18); }
+
+.wy-btn-yes::before, .wy-btn-think::before { content: ''; position: absolute; left:0; right:0; top:0; bottom:0; border-radius:14px; pointer-events:none; }
+.wy-btn-yes { position:relative; overflow:hidden; }
+.wy-btn-yes::after { content: ''; position:absolute; left:-40%; top:0; width:30%; height:100%; background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.1)); transform: skewX(-18deg); transition: left .9s cubic-bezier(.2,.9,.2,1); }
+.wy-btn-yes:hover::after { left:120%; }
+
+.wy-accepted { font-size:22px; font-weight:700; color:#7a1530; }
+.wy-thinking { font-size:16px; color:#6b2135; }
+.wy-quote { color:#7a2b3a; }
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .font-dancing {
+    font-size: 72px;
+  }
+  .font-playfair {
+    font-size: 48px;
+  }
+}
+

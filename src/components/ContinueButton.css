@@ -1,0 +1,92 @@
+/* Enhanced ContinueButton styles with romantic theme */
+.continue-button {
+  margin-top: 2rem;
+  padding: 1rem 3.5rem;
+  font-size: 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b95 0%, #ffc796 50%, #ff89a4 100%);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 20px rgba(255, 107, 149, 0.3),
+              inset 0 2px 8px rgba(255, 255, 255, 0.2);
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: fadeInButton 1s ease forwards;
+  backdrop-filter: blur(5px);
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.continue-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff6b95, #ffc796, #ff89a4);
+  border-radius: 52px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.continue-button:hover {
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 15px 25px rgba(255, 107, 149, 0.4),
+              0 5px 15px rgba(255, 199, 150, 0.3);
+  background: linear-gradient(135deg, #ff89a4 0%, #ffc796 50%, #ff6b95 100%);
+}
+
+.continue-button:hover::before {
+  opacity: 1;
+  animation: borderGlow 2s linear infinite;
+}
+
+.continue-button:active {
+  transform: translateX(-50%) translateY(-1px);
+  box-shadow: 0 8px 15px rgba(255, 107, 149, 0.3);
+}
+
+@keyframes fadeInButton {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, 20px);
+    filter: blur(5px);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translate(-50%, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* Pulsing effect */
+@keyframes pulse {
+  0% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.02); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+.continue-button:not(:hover) {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+  .continue-button {
+    padding: 0.875rem 2.5rem;
+    font-size: 1.1rem;
+  }
+}

@@ -1,0 +1,350 @@
+/* Styles copied (mostly) from the original `style.css` for the Diwali animation. */
+
+/* scope reset for the POC only — avoid changing global app layout */
+.diwali-root * {
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* ensure the fireworks POC occupies the full viewport without page chrome */
+.diwali-root {
+  /* Ensure full viewport coverage with no gaps */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important; /* Force full viewport width */
+  height: 100vh !important; /* Force full viewport height */
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #070205; /* deep night */
+  z-index: 49;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Russo One", arial, sans-serif;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Prevent any potential parent influence */
+  box-sizing: border-box !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.remove {
+  display: none !important;
+}
+
+.blur {
+  filter: blur(12px);
+}
+
+.container {
+  height: 100vh !important;
+  width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+}
+
+.loading-init {
+  width: 100%;
+  align-self: center;
+  text-align: center;
+  text-transform: uppercase;
+  position: absolute;
+  z-index: 50;
+}
+.loading-init__header {
+  font-size: 2.2em;
+}
+.loading-init__status {
+  margin-top: 1em;
+  font-size: 0.8em;
+  opacity: 0.75;
+}
+
+.stage-container {
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  border: 0 none !important;
+  margin: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+.canvas-container {
+  width: 100vw !important;
+  height: 100vh !important;
+  transition: filter 0.3s;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  overflow: hidden !important;
+}
+
+.canvas-container canvas {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  mix-blend-mode: lighten;
+  transform: translateZ(0);
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.controls {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding-bottom: 50px;
+  display: flex;
+  justify-content: space-between;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.btn {
+  opacity: 0.16;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  user-select: none;
+  cursor: default;
+  transition: opacity 0.3s;
+}
+.btn--bright { opacity: 0.5; }
+.btn svg { display: block; margin: auto; }
+
+.menu {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.42);
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.menu__inner-wrap { display:flex; flex-direction:column; justify-content:center; align-items:center;}
+.menu__header { margin-top:auto; margin-bottom:8px; padding-top:16px; font-size:2em; text-transform:uppercase; }
+.menu__subheader { margin-bottom:auto; padding-bottom:12px; font-size:0.86em; opacity:0.8 }
+
+.form-option { display:flex; align-items:center; margin:16px 0; }
+.form-option label { display:block; width:50%; padding-right:12px; text-align:right; text-transform:uppercase; user-select:none; }
+.form-option--select select { display:block; width:50%; height:30px; font-size:1rem; font-family: "Russo One", arial, sans-serif; color: rgba(255,255,255,0.5); background-color:transparent; border:1px solid rgba(255,255,255,0.5); }
+
+.help-modal { display:flex; justify-content:center; align-items:center; position:fixed; top:0; bottom:0; left:0; right:0; visibility:hidden; transition-property:visibility; transition-duration:0.25s; }
+.help-modal__overlay { position:absolute; top:0; bottom:0; left:0; right:0; opacity:0; transition:opacity 0.25s ease-in; }
+.help-modal__dialog { display:flex; flex-direction:column; align-items:center; max-width:400px; max-height:calc(100vh - 100px); margin:10px; padding:20px; border-radius:0.3em; background-color:rgba(0,0,0,0.4); opacity:0; transform:scale(0.9); transition:opacity 0.25s, transform 0.25s; }
+.help-modal__close-btn { outline:none; border:none; border-radius:2px; padding:0.25em 0.75em; margin-top:0.36em; font-family:"Russo One", arial, sans-serif; font-size:1em; color:rgba(255,255,255,0.5); text-transform:uppercase; background-color:rgba(255,255,255,0.25); }
+.help-modal.active { visibility: visible; }
+.help-modal.active .help-modal__overlay { opacity: 1; }
+.help-modal.active .help-modal__dialog { opacity: 1; transform: scale(1); }
+
+/* Ensure canvases cover the full viewport */
+/* Strong overrides to prevent any parent CSS or later script from introducing side gutters. */
+.diwali-root #trails-canvas,
+.diwali-root #main-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+  /* Birthday overlay styles (scoped under .diwali-root) */
+  .diwali-root .birthday-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* Use 3d transform to enable GPU compositing and avoid layout paints */
+  transform: translate3d(-50%, -50%, 0);
+  text-align: center;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  /* shorter duration, GPU-friendly translate, and snappier easing */
+  animation: fadeIn 900ms cubic-bezier(.2,.9,.2,1) forwards;
+  will-change: opacity, transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  z-index: 9999;
+  width: 90%;
+  max-width: 800px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.diwali-root .birthday-text h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  color: #ff5ea0;
+  font-family: "Great Vibes", cursive;
+  text-shadow: 0 0 25px #ff5ea0, 0 0 50px #ff5ea0;
+  animation: glow 2.5s ease-in-out infinite alternate;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.diwali-root .birthday-text h2 {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  color: #ffd1dc;
+  margin-top: 1rem;
+  font-weight: 500;
+  text-shadow: 0 0 20px #ffb3c6;
+  line-height: 1.3;
+}
+
+.diwali-root .birthday-text p {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: #fff5f7;
+  margin-top: 1.5rem;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translate3d(-50%, -60%, 0); }
+  60% { opacity: 0.95; transform: translate3d(-50%, -53%, 0); }
+  100% { opacity: 1; transform: translate3d(-50%, -50%, 0); }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #ff5ea0, 0 0 20px #ff5ea0, 0 0 30px #ff5ea0;
+  }
+  to {
+    text-shadow: 0 0 30px #ff5ea0, 0 0 60px #ff5ea0, 0 0 90px #ff5ea0;
+  }
+}
+
+/* Reveal overlay to smoothly crossfade from blackout into fireworks */
+.diwali-root .reveal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: #000 !important;
+  z-index: 60 !important; /* above canvas but below birthday text (which is 9999) */
+  opacity: 1;
+  transition: opacity 900ms cubic-bezier(.2,.9,.2,1);
+  pointer-events: none;
+}
+.diwali-root .reveal-overlay.hidden {
+  opacity: 0 !important;
+}
+
+/* Ensure the Continue button sits above the canvases so it receives pointer events */
+.diwali-root .continue-button {
+  position: fixed !important;
+  z-index: 10001 !important;
+  top: 80% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  padding: 0.8rem 2rem !important;
+  font-size: 1.1rem !important;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4) !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 500 !important;
+  color: white !important;
+  background: linear-gradient(135deg, #ff6ec4, #ffbf36) !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 10px 25px -5px rgba(255, 110, 196, 0.5) !important;
+}
+
+.diwali-root .continue-button:hover {
+  transform: translateX(-50%) translateY(-2px) !important;
+  box-shadow: 0 15px 30px -5px rgba(255, 110, 196, 0.6) !important;
+  background: linear-gradient(135deg, #ff6ec4, #ffbf36, #ff6ec4) !important;
+  background-size: 200% 200% !important;
+  animation: shimmerButton 3s linear infinite !important;
+}
+
+.diwali-root .continue-button:active {
+  transform: translateX(-50%) translateY(-1px) !important;
+}
+
+@keyframes shimmerButton {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fullscreen transparent overlay that captures all pointer events while Continue is visible */
+.diwali-root .continue-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: auto !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* Hide controls/buttons: pause, sound, settings - keep menu/settings internals but hide UI */
+.diwali-root .controls,
+.diwali-root .controls .pause-btn,
+.diwali-root .controls .sound-btn,
+.diwali-root .controls .settings-btn,
+.diwali-root .menu {
+  display: none !important;
+}
+
+/* Ensure the stage container and controls occupy the full overlay */
+.diwali-root .stage-container {
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.diwali-root .controls {
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  box-sizing: border-box !important;
+}
+.diwali-root .controls .btn { opacity: 0.9 !important; }
+
+/* If the original script positions controls with transforms, reset them */
+.diwali-root .controls, .diwali-root .controls * {
+  transform: none !important;
+}
+
+/* small responsive tweaks */
+@media (max-width: 840px) {
+  .stage-container { border:none; margin:0; }
+}

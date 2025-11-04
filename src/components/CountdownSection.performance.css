@@ -1,0 +1,93 @@
+/* Performance optimizations */
+.hardware-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize floating elements */
+.floating-elements-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
+  z-index: 1;
+}
+
+.floating-element {
+  position: absolute;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Optimize number animations */
+.number-display {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Optimize gradients */
+.optimized-gradient {
+  transform: translateZ(0);
+  will-change: background-position;
+  backface-visibility: hidden;
+}
+
+/* Optimize button effects */
+.magic-button {
+  transform: translateZ(0);
+  will-change: transform, opacity, box-shadow;
+  backface-visibility: hidden;
+}
+
+/* Optimize confetti and particles */
+.particle-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
+  z-index: 2;
+}
+
+/* Optimize glow effects */
+.glow-effect {
+  transform: translateZ(0);
+  will-change: opacity, filter;
+  backface-visibility: hidden;
+}
+
+/* Optimize transitions */
+.transition-optimized {
+  transition-property: transform, opacity;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Layer composition optimization */
+.composite-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: paint layout style;
+}
+
+/* Animation performance settings */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .animation-container {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Reduce paints for background effects */
+.background-effects {
+  transform: translateZ(0);
+  will-change: transform;
+  contain: paint layout style;
+}

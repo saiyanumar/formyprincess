@@ -1,0 +1,229 @@
+.final-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffcee6 0%, #ffd6f1 50%, #e4f9ff 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  animation: fadeIn 1s ease-in forwards;
+}
+
+.text-overlay h1 {
+  font-size: 3rem;
+  font-family: 'Pacifico', cursive;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: floatText 2s ease-in-out infinite;
+}
+
+.love-message {
+  text-align: center;
+  animation: fadeIn 2s ease-in forwards;
+}
+
+.heart {
+  width: 100px;
+  height: 100px;
+  background-color: #ff4e91;
+  transform: rotate(45deg);
+  position: relative;
+  margin: 50px auto;
+  animation: heartbeat 1.5s ease-in-out infinite;
+  box-shadow: 0 0 40px rgba(255, 78, 145, 0.5);
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  width: 100px;
+  height: 100px;
+  background-color: #ff4e91;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.heart::before {
+  left: -50px;
+}
+
+.heart::after {
+  top: -50px;
+}
+
+.final-text {
+  margin-top: 50px;
+  color: #ff4e91;
+  text-shadow: 0 0 10px rgba(255, 78, 145, 0.3);
+}
+
+.final-text h1 {
+  font-size: 4rem;
+  font-family: 'Pacifico', cursive;
+  margin-bottom: 20px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.final-text p {
+  font-size: 1.8rem;
+  font-family: 'Poppins', sans-serif;
+  color: #6a4c93;
+  opacity: 0;
+  animation: fadeInText 1s ease-in forwards 1s;
+}
+
+.back-button {
+  margin-top: 50px;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #ff4e91;
+  color: #ff4e91;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  opacity: 0;
+  animation: fadeInButton 1s ease-in forwards 2s;
+}
+
+.back-button:hover {
+  background: #ff4e91;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 78, 145, 0.4);
+}
+
+@keyframes heartbeat {
+  0% { transform: rotate(45deg) scale(1); }
+  14% { transform: rotate(45deg) scale(1.1); }
+  28% { transform: rotate(45deg) scale(1); }
+  42% { transform: rotate(45deg) scale(1.1); }
+  70% { transform: rotate(45deg) scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInText {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInButton {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 20px #ff4e91,
+                 0 0 30px #ff4e91,
+                 0 0 40px #ff4e91;
+  }
+  to {
+    text-shadow: 0 0 10px #ff4e91,
+                 0 0 20px #ff4e91,
+                 0 0 30px #ff4e91;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .text-overlay h1 {
+    font-size: 2rem;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  .final-text h1 {
+    font-size: 3rem;
+  }
+
+  .final-text p {
+    font-size: 1.4rem;
+  }
+
+  .heart {
+    width: 80px;
+    height: 80px;
+  }
+
+  .heart::before,
+  .heart::after {
+    width: 80px;
+    height: 80px;
+  }
+
+  .heart::before {
+    left: -40px;
+  }
+
+  .heart::after {
+    top: -40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-overlay h1 {
+    font-size: 1.5rem;
+  }
+
+  .final-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .final-text p {
+    font-size: 1.2rem;
+  }
+
+  .heart {
+    width: 60px;
+    height: 60px;
+  }
+
+  .heart::before,
+  .heart::after {
+    width: 60px;
+    height: 60px;
+  }
+
+  .heart::before {
+    left: -30px;
+  }
+
+  .heart::after {
+    top: -30px;
+  }
+}

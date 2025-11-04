@@ -1,0 +1,230 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Sparkles } from 'lucide-react';
+import Confetti from 'react-confetti';
+import '@/components/WillYouBeMyWife.css';
+import { fireConfetti } from '@/lib/confetti';
+
+const lines = [
+  'Ruqayya, the girl who changed my world...',
+  'Will you be my wife? ❤️',
+];
+
+const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) => {
+  const [step, setStep] = useState(0);
+  const [showButtons, setShowButtons] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [thinking, setThinking] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const timer1 = setTimeout(() => setStep(1), 1000);
+    const timer2 = setTimeout(() => setStep(2), 3000);
+    const timer3 = setTimeout(() => setShowButtons(true), 5000);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, []);
+
+  useEffect(() => {
+    // floating name in background
+    const el = containerRef.current;
+    if (!el) return;
+    let angle = 0;
+    let raf = 0;
+    const step = () => {
+      angle += 0.002;
+      const x = Math.cos(angle) * 12;
+      const y = Math.sin(angle) * 6;
+      const bg = el.querySelector('.proposal-orbit') as HTMLElement | null;
+      if (bg) {
+        bg.style.transform = `translate(${x}px, ${y}px)`;
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    // continuous subtle floating hearts in background
+    const root = containerRef.current;
+    if (!root) return;
+    let running = true;
+    const spawn = () => {
+      if (!running || !root) return;
+      const h = document.createElement('div');
+      h.className = 'wy-heart-floating';
+      h.style.left = `${Math.random() * 100}%`;
+      h.style.animationDuration = `${6 + Math.random() * 8}s`;
+      h.style.opacity = `${0.08 + Math.random() * 0.12}`;
+      root.appendChild(h);
+      setTimeout(() => h.remove(), 16000);
+      setTimeout(spawn, 800 + Math.random() * 1400);
+    };
+    const first = setTimeout(spawn, 400);
+    return () => {
+      running = false;
+      clearTimeout(first);
+    };
+  }, []);
+
+  const playPlaceholder = (url?: string) => {
+    try {
+      if (!url) return;
+      const a = new Audio(url);
+      a.volume = 0.6;
+      a.play().catch(() => {});
+    } catch {}
+  };
+
+  const triggerConfettiAndPetals = () => {
+    // simple DOM particle generators (CSS driven)
+    const root = containerRef.current;
+    if (!root) return;
+    // Create confetti pieces (DOM fallback for softer pieces)
+    for (let i = 0; i < 18; i++) {
+      const d = document.createElement('div');
+      d.className = 'wy-confetti-piece';
+      d.style.left = `${50 + (Math.random() - 0.5) * 40}%`;
+      d.style.background = ['#FFD6DA', '#FFC6A5', '#FFD9B3', '#FFE4E1'][Math.floor(Math.random() * 4)];
+      d.style.transform = `rotate(${Math.random() * 360}deg)`;
+      root.appendChild(d);
+      setTimeout(() => d.remove(), 4200);
+    }
+
+    // Petal rain
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'wy-petal';
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.animationDelay = `${Math.random() * 0.8}s`;
+      root.appendChild(p);
+      setTimeout(() => p.remove(), 6000);
+    }
+
+    // Canvas confetti (richer burst)
+    try {
+      fireConfetti();
+    } catch (e) {
+      // ignore if confetti lib not available
+    }
+  };
+
+  const handleYes = () => {
+    setAccepted(true);
+    setShowConfetti(true);
+    playPlaceholder('/proposal-yes.mp3');
+    fireConfetti();
+    // show follow-up text briefly then call onComplete
+    setTimeout(() => {
+      setShowConfetti(false);
+      if (onComplete) onComplete();
+    }, 8000);
+  };
+
+  const handleThink = () => {
+    setThinking(true);
+    playPlaceholder('/proposal-think.mp3');
+    setTimeout(() => setThinking(false), 2000);
+  };
+
+  // Floating particles
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 5,
+    duration: 3 + Math.random() * 3,
+  }));
+
+  return (
+    <section ref={containerRef} className={`wy-proposal-root ${roseGold ? 'wy-rosegold' : ''} ${visibleLine >= 1 ? 'wy-question-visible' : ''}`}>
+      <div className="wy-bokeh-layer" />
+      <div className="wy-glow-layer" />
+      <div className="wy-particles-layer" aria-hidden>
+        {/* empty - particles are injected via DOM for bursts */}
+      </div>
+
+      <div className="wy-orbit-container">
+        <div className="proposal-orbit">Umar ❤️ Ruqayya</div>
+      </div>
+
+      <div className="wy-content max-w-3xl mx-auto text-center px-6 py-20">
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="wy-lines"
+          >
+            {lines.map((t, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={visibleLine >= i ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.7, delay: i === 0 ? 0 : 0.05 }}
+                className={`wy-line ${i === 1 ? 'wy-question-line' : ''}`}
+                aria-hidden={visibleLine < i}
+              >
+                <span className={`wy-line-text ${i === 1 ? 'wy-question' : ''}`}>
+                  {t}
+                  {i === 1 && <span className="wy-question-sparkles" aria-hidden />}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="wy-buttons mt-10">
+          <button
+            className="wy-btn wy-btn-yes"
+            onClick={handleYes}
+            aria-pressed={accepted}
+          >
+            💞 Yes, forever ❤️
+          </button>
+          <button
+            className="wy-btn wy-btn-think"
+            onClick={handleThink}
+            disabled={thinking}
+          >
+            🥺 Let me think…
+          </button>
+        </div>
+
+        <div className="wy-subtext mt-6 text-rose-700/80">
+          {accepted && (
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}>
+              <div className="wy-accepted">I knew it 😭❤️</div>
+            </motion.div>
+          )}
+
+          {thinking && !accepted && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+              <div className="wy-thinking">Take your time… but I already know your answer 😉</div>
+            </motion.div>
+          )}
+
+          {!accepted && !thinking && (
+            <div className="wy-quote mt-6 italic text-sm">“Every heartbeat, every second — it’s all for you.”</div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default WillYouBeMyWife;

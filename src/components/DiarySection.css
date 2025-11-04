@@ -1,0 +1,42 @@
+.diary-continue-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 3.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #ff6b95 0%, #ffc796 50%, #ff89a4 100%);
+  background-size: 200% 200%;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 20px rgba(255, 107, 149, 0.18), inset 0 2px 8px rgba(255,255,255,0.2);
+  margin: 2rem auto;
+  letter-spacing: 0.5px;
+  z-index: 50;
+  opacity: 0;
+  animation: fadeInButton 1s ease forwards 1.5s;
+}
+
+.diary-continue-button::after {
+  content: '⏰';
+  margin-left: 0.5rem;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.diary-continue-button:hover {
+  background-position: 100% 50%;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 107, 149, 0.28);
+  letter-spacing: 1px;
+}
+
+.diary-continue-button:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
