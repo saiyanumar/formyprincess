@@ -1231,7 +1231,7 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
-                {appState.isComplete ? "Your journey awaits..." : "The anticipation builds..."}
+                {appState.isComplete ? "Ready to see your surprise? Click below and enjoy the magic ✨" : "Just a few more moments… ✨"}
               </motion.p>
               <motion.div
                 animate={{
