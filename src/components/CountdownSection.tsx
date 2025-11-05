@@ -1206,7 +1206,7 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              {appState.isComplete ? "Your love story begins here ✨" : "Preparing something special for u jana ❤️..."}
+              {appState.isComplete ? "Finally sharing what I’ve been working on for you, jana ❤️" : "Preparing something special for u jana ❤️..."}
             </motion.p>
 
             <motion.div 
