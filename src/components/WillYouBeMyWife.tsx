@@ -54,7 +54,7 @@ const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) 
     setTimeout(() => {
       setShowConfetti(false);
       if (onComplete) onComplete();
-    }, 6000);
+    }, 8000);
   };
 
   const handleThink = () => {
