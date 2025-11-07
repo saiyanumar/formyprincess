@@ -399,29 +399,52 @@ if (!fullscreenEnabled()) {
 
 // First render is called in init()
 function renderApp(state) {
-	const pauseBtnIcon = `#icon-${state.paused ? 'play' : 'pause'}`;
+  const pauseBtnIcon = `#icon-${state.paused ? 'play' : 'pause'}`;
 	const soundBtnIcon = `#icon-sound-${soundEnabledSelector() ? 'on' : 'off'}`;
-	appNodes.pauseBtnSVG.setAttribute('href', pauseBtnIcon);
-	appNodes.pauseBtnSVG.setAttribute('xlink:href', pauseBtnIcon);
-	appNodes.soundBtnSVG.setAttribute('href', soundBtnIcon);
-	appNodes.soundBtnSVG.setAttribute('xlink:href', soundBtnIcon);
-	appNodes.controls.classList.toggle('hide', state.menuOpen || state.config.hideControls);
-	appNodes.canvasContainer.classList.toggle('blur', state.menuOpen);
-	appNodes.menu.classList.toggle('hide', !state.menuOpen);
-	appNodes.finaleModeFormOption.style.opacity = state.config.autoLaunch ? 1 : 0.32;
 	
-	appNodes.quality.value = state.config.quality;
-	appNodes.shellType.value = state.config.shell;
-	appNodes.shellSize.value = state.config.size;
-	appNodes.autoLaunch.checked = state.config.autoLaunch;
-	appNodes.finaleMode.checked = state.config.finale;
-	appNodes.skyLighting.value = state.config.skyLighting;
-	appNodes.hideControls.checked = state.config.hideControls;
-	appNodes.fullscreen.checked = state.fullscreen;
-	appNodes.longExposure.checked = state.config.longExposure;
-	appNodes.scaleFactor.value = state.config.scaleFactor.toFixed(2);
+	if (appNodes.pauseBtnSVG) {
+		appNodes.pauseBtnSVG.setAttribute('href', pauseBtnIcon);
+		appNodes.pauseBtnSVG.setAttribute('xlink:href', pauseBtnIcon);
+	}
 	
-	appNodes.menuInnerWrap.style.opacity = state.openHelpTopic ? 0.12 : 1;
+	if (appNodes.soundBtnSVG) {
+		appNodes.soundBtnSVG.setAttribute('href', soundBtnIcon);
+		appNodes.soundBtnSVG.setAttribute('xlink:href', soundBtnIcon);
+	}
+	
+	if (appNodes.controls) {
+		appNodes.controls.classList.toggle('hide', state.menuOpen || state.config.hideControls);
+	}
+	
+	if (appNodes.canvasContainer) {
+		appNodes.canvasContainer.classList.toggle('blur', state.menuOpen);
+	}
+	
+	if (appNodes.menu) {
+		appNodes.menu.classList.toggle('hide', !state.menuOpen);
+	}
+	
+	if (appNodes.finaleModeFormOption) {
+		appNodes.finaleModeFormOption.style.opacity = state.config.autoLaunch ? 1 : 0.32;
+	}
+	
+	// Safely set form values
+	if (appNodes.quality) appNodes.quality.value = state.config.quality;
+	if (appNodes.shellType) appNodes.shellType.value = state.config.shell;
+	if (appNodes.shellSize) appNodes.shellSize.value = state.config.size;
+	if (appNodes.autoLaunch) appNodes.autoLaunch.checked = state.config.autoLaunch;
+	if (appNodes.finaleMode) appNodes.finaleMode.checked = state.config.finale;
+	if (appNodes.skyLighting) appNodes.skyLighting.value = state.config.skyLighting;
+	if (appNodes.hideControls) appNodes.hideControls.checked = state.config.hideControls;
+	if (appNodes.fullscreen) appNodes.fullscreen.checked = state.fullscreen;
+	if (appNodes.longExposure) appNodes.longExposure.checked = state.config.longExposure;
+	if (appNodes.scaleFactor && state.config.scaleFactor != null) {
+		try {
+			appNodes.scaleFactor.value = state.config.scaleFactor.toFixed(2);
+		} catch (e) {
+			console.warn('Error setting scale factor:', e);
+		}
+	}	appNodes.menuInnerWrap.style.opacity = state.openHelpTopic ? 0.12 : 1;
 	appNodes.helpModal.classList.toggle('active', !!state.openHelpTopic);
 	if (state.openHelpTopic) {
 		const { header, body } = helpContent[state.openHelpTopic];
@@ -747,13 +770,28 @@ function randomShellName() {
 }
 
 function randomShell(size) {
-	if (IS_HEADER) return randomFastShell()(size);
-	// Normal operation
-	return shellTypes[randomShellName()](size);
+	try {
+		if (IS_HEADER) {
+			const fastShellFn = randomFastShell();
+			return typeof fastShellFn === 'function' ? fastShellFn(size) : crysanthemumShell(size);
+		}
+		// Normal operation
+		const shellName = randomShellName();
+		const shellFn = shellTypes[shellName];
+		return typeof shellFn === 'function' ? shellFn(size) : crysanthemumShell(size);
+	} catch (e) {
+		console.error('Error in randomShell:', e);
+		return crysanthemumShell(size);
+	}
 }
 
 function shellFromConfig(size) {
-	return shellTypes[shellNameSelector()](size);
+  const shellName = shellNameSelector();
+  if (shellName && shellTypes[shellName]) {
+    return shellTypes[shellName](size);
+  }
+  // Fallback to random shell if something goes wrong
+  return randomShell(size);
 }
 
 // Get a random shell, not including processing intensive varients
@@ -761,31 +799,68 @@ function shellFromConfig(size) {
 // Also, this does not create the shell, only returns the factory function.
 const fastShellBlacklist = ['Falling Leaves', 'Floral', 'Willow'];
 function randomFastShell() {
-	const isRandom = shellNameSelector() === 'Random';
-	let shellName = isRandom ? randomShellName() : shellNameSelector();
-	if (isRandom) {
-		while (fastShellBlacklist.includes(shellName)) {
-			shellName = randomShellName();
+	try {
+		const isRandom = shellNameSelector() === 'Random';
+		let shellName = isRandom ? randomShellName() : shellNameSelector();
+		if (isRandom) {
+			while (fastShellBlacklist.includes(shellName)) {
+				shellName = randomShellName();
+			}
 		}
+		
+		// Validate that we have a valid shell type function
+		const shellFn = shellTypes[shellName];
+		if (typeof shellFn !== 'function') {
+			console.warn('Invalid shell type:', shellName, 'falling back to crysanthemum');
+			return crysanthemumShell;
+		}
+		return shellFn;
+	} catch (e) {
+		console.error('Error in randomFastShell:', e);
+		return crysanthemumShell;
 	}
-	return shellTypes[shellName];
 }
 
 
+// Create a safe wrapper around shell type functions
+function createSafeShellType(fn, name) {
+    return function safeShell(size=1) {
+        try {
+            if (typeof fn !== 'function') {
+                console.warn(`Shell type ${name} is not a function, using fallback`);
+                return crysanthemumShell(size);
+            }
+            return fn(size);
+        } catch (e) {
+            console.error(`Error in shell type ${name}:`, e);
+            return crysanthemumShell(size);
+        }
+    };
+}
+
+// Define shell types with safety wrappers
 const shellTypes = {
-	'Random': randomShell,
-	'Crackle': crackleShell,
-	'Crossette': crossetteShell,
-	'Crysanthemum': crysanthemumShell,
-	'Falling Leaves': fallingLeavesShell,
-	'Floral': floralShell,
-	'Ghost': ghostShell,
-	'Horse Tail': horsetailShell,
-	'Palm': palmShell,
-	'Ring': ringShell,
-	'Strobe': strobeShell,
-	'Willow': willowShell
+    'Random': createSafeShellType(randomShell, 'Random'),
+    'Crackle': createSafeShellType(crackleShell, 'Crackle'),
+    'Crossette': createSafeShellType(crossetteShell, 'Crossette'),
+    'Crysanthemum': createSafeShellType(crysanthemumShell, 'Crysanthemum'),
+    'Falling Leaves': createSafeShellType(fallingLeavesShell, 'Falling Leaves'),
+    'Floral': createSafeShellType(floralShell, 'Floral'),
+    'Ghost': createSafeShellType(ghostShell, 'Ghost'),
+    'Horse Tail': createSafeShellType(horsetailShell, 'Horse Tail'),
+    'Palm': createSafeShellType(palmShell, 'Palm'),
+    'Ring': createSafeShellType(ringShell, 'Ring'),
+    'Strobe': createSafeShellType(strobeShell, 'Strobe'),
+    'Willow': createSafeShellType(willowShell, 'Willow')
 };
+
+// Ensure all shell types are functions
+Object.keys(shellTypes).forEach(key => {
+    if (typeof shellTypes[key] !== 'function') {
+        console.warn(`Invalid shell type for ${key}, falling back to default`);
+        shellTypes[key] = crysanthemumShell;
+    }
+});
 
 const shellNames = Object.keys(shellTypes);
 
@@ -873,14 +948,39 @@ function getRandomShellSize() {
 
 // Launches a shell from a user pointer event, based on state.config
 function launchShellFromConfig(event) {
-	const shell = new Shell(shellFromConfig(shellSizeSelector()));
-	const w = mainStage.width;
-	const h = mainStage.height;
-	
-	shell.launch(
-		event ? event.x / w : getRandomShellPositionH(),
-		event ? 1 - event.y / h : getRandomShellPositionV()
-	);
+    try {
+        // Get shell configuration with a safe shell type
+        const shellName = shellNameSelector();
+        const shellFn = shellTypes[shellName] || shellTypes['Crysanthemum'];
+        const size = shellSizeSelector();
+        const shellConfig = shellFn(size);
+        
+        if (!shellConfig) {
+            console.warn('Using default shell configuration');
+            shellConfig = shellTypes['Crysanthemum'](size);
+        }
+        
+        const shell = new Shell(shellConfig);
+        const w = mainStage.width;
+        const h = mainStage.height;
+        
+        shell.launch(
+            event ? event.x / w : getRandomShellPositionH(),
+            event ? 1 - event.y / h : getRandomShellPositionV()
+        );
+    } catch (e) {
+        console.error('Error launching shell from config:', e);
+        try {
+            // Fallback to a basic shell if everything else fails
+            const shell = new Shell(crysanthemumShell(shellSizeSelector()));
+            shell.launch(
+                event ? event.x / w : getRandomShellPositionH(),
+                event ? 1 - event.y / h : getRandomShellPositionV()
+            );
+        } catch (e2) {
+            console.error('Critical error: Even fallback shell failed:', e2);
+        }
+    }
 }
 
 
@@ -932,29 +1032,38 @@ function seqTwoRandom() {
 }
 
 function seqTriple() {
-	const shellType = randomFastShell();
+	// Get a safe shell function
+	const shellFn = createSafeShellType(randomFastShell(), 'FastShell');
 	const baseSize = shellSizeSelector();
 	const smallSize = Math.max(0, baseSize - 1.25);
-	
+
 	const offset = Math.random() * 0.08 - 0.04;
-	const shell1 = new Shell(shellType(baseSize));
+	const shell1 = new Shell(shellFn(baseSize));
 	shell1.launch(0.5 + offset, 0.7);
-	
+
 	const leftDelay = 1000 + Math.random() * 400;
 	const rightDelay = 1000 + Math.random() * 400;
-	
+
 	setTimeout(() => {
-		const offset = Math.random() * 0.08 - 0.04;
-		const shell2 = new Shell(shellType(smallSize));
-		shell2.launch(0.2 + offset, 0.1);
+		try {
+			const offset = Math.random() * 0.08 - 0.04;
+			const shell2 = new Shell(shellFn(smallSize));
+			shell2.launch(0.2 + offset, 0.1);
+		} catch (e) {
+			console.error('Error launching left shell:', e);
+		}
 	}, leftDelay);
-	
+
 	setTimeout(() => {
-		const offset = Math.random() * 0.08 - 0.04;
-		const shell3 = new Shell(shellType(smallSize));
-		shell3.launch(0.8 + offset, 0.1);
+		try {
+			const offset = Math.random() * 0.08 - 0.04;
+			const shell3 = new Shell(shellFn(smallSize));
+			shell3.launch(0.8 + offset, 0.1);
+		} catch (e) {
+			console.error('Error launching right shell:', e);
+		}
 	}, rightDelay);
-	
+
 	return 4000;
 }
 
@@ -962,22 +1071,41 @@ function seqPyramid() {
 	const barrageCountHalf = IS_DESKTOP ? 7 : 4;
 	const largeSize = shellSizeSelector();
 	const smallSize = Math.max(0, largeSize - 3);
-	const randomMainShell = Math.random() < 0.78 ? crysanthemumShell : ringShell;
-	const randomSpecialShell = randomShell;
+	const randomMainShell = createSafeShellType(
+		Math.random() < 0.78 ? crysanthemumShell : ringShell,
+		'PyramidMain'
+	);
+	const randomSpecialShell = createSafeShellType(randomShell, 'PyramidSpecial');
 
 	function launchShell(x, useSpecial) {
-		const isRandom = shellNameSelector() === 'Random';
-		let shellType = isRandom
-			? useSpecial ? randomSpecialShell : randomMainShell
-			: shellTypes[shellNameSelector()];
-		const shell = new Shell(shellType(useSpecial ? largeSize : smallSize));
-		const height = x <= 0.5 ? x / 0.5 : (1 - x) / 0.5;
-		shell.launch(x, useSpecial ? 0.75 : height * 0.42);
+		try {
+			const shellName = shellNameSelector();
+			const isRandom = shellName === 'Random';
+			
+			// Get the appropriate shell function with safety wrapper
+			const shellFn = isRandom
+				? useSpecial ? randomSpecialShell : randomMainShell
+				: createSafeShellType(shellTypes[shellName] || crysanthemumShell, shellName);
+			
+			const shell = new Shell(shellFn(useSpecial ? largeSize : smallSize));
+			const height = x <= 0.5 ? x / 0.5 : (1 - x) / 0.5;
+			shell.launch(x, useSpecial ? 0.75 : height * 0.42);
+		} catch (e) {
+			console.error('Error in pyramid launch:', e);
+			// Fallback to basic shell
+			try {
+				const shell = new Shell(crysanthemumShell(smallSize));
+				shell.launch(x, 0.5);
+			} catch (e2) {
+				console.error('Critical: Fallback shell failed:', e2);
+			}
+		}
 	}
 	
 	let count = 0;
 	let delay = 0;
-	while(count <= barrageCountHalf) {
+	
+	while (count <= barrageCountHalf) {
 		if (count === barrageCountHalf) {
 			setTimeout(() => {
 				launchShell(0.5, true);
@@ -999,7 +1127,7 @@ function seqPyramid() {
 	
 	return 3400 + barrageCountHalf * 250;
 }
-
+    
 function seqSmallBarrage() {
 	seqSmallBarrage.lastCalled = Date.now();
 	const barrageCount = IS_DESKTOP ? 11 : 5;
@@ -1010,13 +1138,27 @@ function seqSmallBarrage() {
 	
 	// (cos(x*5π+0.5π)+1)/2 is a custom wave bounded by 0 and 1 used to set varying launch heights
 	function launchShell(x, useSpecial) {
-		const isRandom = shellNameSelector() === 'Random';
-		let shellType = isRandom
-			? useSpecial ? randomSpecialShell : randomMainShell
-			: shellTypes[shellNameSelector()];
-		const shell = new Shell(shellType(shellSize));
-		const height = (Math.cos(x*5*Math.PI + PI_HALF) + 1) / 2;
-		shell.launch(x, height * 0.75);
+		const shellName = shellNameSelector();
+		const isRandom = shellName === 'Random';
+		let shellType;
+
+		try {
+			if (isRandom) {
+				shellType = useSpecial ? randomSpecialShell : randomMainShell;
+			} else if (shellTypes[shellName]) {
+				shellType = shellTypes[shellName];
+			} else {
+				// Fallback to a default shell type if the selected one doesn't exist
+				console.warn('Invalid shell type:', shellName);
+				shellType = crysanthemumShell;
+			}
+			
+			const shell = new Shell(shellType(shellSize));
+			const height = (Math.cos(x*5*Math.PI + PI_HALF) + 1) / 2;
+			shell.launch(x, height * 0.75);
+		} catch (e) {
+			console.error('Error launching shell:', e);
+		}
 	}
 	
 	let count = 0;

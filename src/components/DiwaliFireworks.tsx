@@ -147,7 +147,7 @@ const DiwaliFireworks = ({ onComplete, enablePerformanceReducer = false, applyOr
         }
 
         // Helper: wait until the original script has populated the selects (or timeout)
-        const waitForSelects = async (timeout = 2000) => {
+  const waitForSelects = async (timeout = 5000) => {
           const start = Date.now();
           while (Date.now() - start < timeout) {
             const shellType = document.querySelector('.shell-type') as HTMLSelectElement | null;
@@ -386,9 +386,11 @@ const DiwaliFireworks = ({ onComplete, enablePerformanceReducer = false, applyOr
         // start the reveal fade shortly after the script settles so the fireworks
         // crossfade from black instead of popping in abruptly.
         try {
+          // Give the vendor script a bit more time to settle before removing the reveal overlay.
+          // 120ms was occasionally too short on first load (network/CPU variance). Increase to 400ms.
           setTimeout(() => {
             setReveal(false);
-          }, 120);
+          }, 400);
         } catch (e) {
           // ignore
         }

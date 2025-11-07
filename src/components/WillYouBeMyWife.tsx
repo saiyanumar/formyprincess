@@ -31,8 +31,8 @@ const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) 
 
   useEffect(() => {
     const timer1 = setTimeout(() => setStep(1), 1000);
-    const timer2 = setTimeout(() => setStep(2), 3000);
-    const timer3 = setTimeout(() => setShowButtons(true), 5000);
+    const timer2 = setTimeout(() => setStep(2), 5000);  // Changed to 5 seconds
+    const timer3 = setTimeout(() => setShowButtons(true), 7000);  // Adjusted to 7 seconds
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -54,7 +54,7 @@ const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) 
     setTimeout(() => {
       setShowConfetti(false);
       if (onComplete) onComplete();
-    }, 8000);
+    }, 6000);
   };
 
   const handleThink = () => {
@@ -168,10 +168,10 @@ const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) 
       className="absolute text-rose-400/60 text-2xl"
       style={{
   top: `${50 + Math.random() * 50}%`,
-  // Avoid the middle 30–70% zone (keeps center clear)
-  left: `${Math.random() < 0.6 
-    ? 5 + Math.random() * 25 
-    : 90 + Math.random() * 25}%`,
+  // Keep hearts to the far sides to avoid overlapping with text
+  left: `${Math.random() < 0.5 
+    ? Math.random() * 15  // Left side: 0-15%
+    : 85 + Math.random() * 15}%`,  // Right side: 85-100%
 }}
 
       animate={{
@@ -341,7 +341,7 @@ const WillYouBeMyWife: React.FC<{ onComplete?: () => void }> = ({ onComplete }) 
               animate={{ y: 0 }}
               className="text-5xl md:text-7xl lg:text-8xl font-dancing font-bold text-white drop-shadow-2xl"
             >
-             Qurban Sham Tana Zama Janana 😭❤️
+             Awwww Qurban Jaon Aapse Ruqiiiiii 😭❤️
             </motion.h1>
 
             <motion.p

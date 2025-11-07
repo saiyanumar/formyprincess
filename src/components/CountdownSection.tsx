@@ -41,12 +41,16 @@ interface CountdownSectionProps {
 
 // Configuration and constants (centralized)
 const CONFIG = {
-  TARGET_DATE: new Date("November 05, 2025 16:08:00"),
+  TARGET_DATE: new Date("November 07, 2025 17:17:30"),
   COUNTDOWN_ALERT_THRESHOLD_MS: 11000,
   FINAL_COUNTDOWN_SECONDS: 11,
   HEARTS_ON_ALERT: 1,
   PARTICLE_COUNT: 12,
   CONFETTI_DURATION_MS: 8000,
+  // blackout / reveal tuning (dramatic preset: longer hold for ceremonial handoff)
+  REVEAL_HOLD_MIN_MS: 2000,
+  REVEAL_HOLD_FRACTION: 0.2, // fraction of confetti duration to wait before notifying parent
+  POST_BLACKOUT_MS: 2000,
 } as const;
 
 // Set target date for countdown (use CONFIG.TARGET_DATE where needed)
@@ -355,7 +359,8 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
     return () => document.removeEventListener('visibilitychange', handler);
   }, []);
   // Add transient UI states for reveal effects
-  const [backgroundFlash, setBackgroundFlash] = useState(false);
+  // blackoutActive: used to show a full-screen fade-to-black when the reveal button is clicked
+  const [blackoutActive, setBlackoutActive] = useState(false);
   const [sparkles, setSparkles] = useState<Array<{ 
     id: number; 
     left: number; 
@@ -407,11 +412,11 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
           dispatch({ type: 'SET_COMPLETE' });
         }
       },
-      // Phase 2: Simple visual feedback (16ms - next frame)
+      // Phase 2: reserved for lightweight visual feedback (kept intentionally empty to avoid abrupt flashes)
       {
         delay: 16,
         action: () => {
-          setBackgroundFlash(true);
+          // intentionally no-op to avoid a white flash during reveal
         }
       },
       // Phase 3: Title transition effects (100ms)
@@ -560,17 +565,17 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
       }
 
       // Cleanup phase - only if still mounted
-      if (mounted.current) {
-        const cleanupTimer = window.setTimeout(() => {
-          requestAnimationFrame(() => {
-            if (mounted.current) {
-              setSparkles([]);
-              setBackgroundFlash(false);
-            }
-          });
-        }, 3000);
-        timersRef.current.push(cleanupTimer);
-      }
+        if (mounted.current) {
+          const cleanupTimer = window.setTimeout(() => {
+            requestAnimationFrame(() => {
+              if (mounted.current) {
+                setSparkles([]);
+                // background flash removed to avoid white flash during reveal
+              }
+            });
+          }, 3000);
+          timersRef.current.push(cleanupTimer);
+        }
     };
 
     // Start the sequence
@@ -839,10 +844,26 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
   // Handler that performs the reveal and calls onComplete
   const handleReveal = useCallback(() => {
     if (!appState.isComplete) return;
-    // mark reveal started and call parent handler
+    // mark reveal started
     dispatch({ type: 'START_REVEAL' });
-    onComplete();
-  }, [appState.isComplete, onComplete]);
+
+    // show full-screen blackout fade to smoothly transition to fireworks
+    setBlackoutActive(true);
+
+  // compute hold time before notifying parent (small fraction of confetti duration, bounded)
+  const holdMs = Math.max(CONFIG.REVEAL_HOLD_MIN_MS, Math.floor(effectiveConfettiDuration * CONFIG.REVEAL_HOLD_FRACTION));
+
+    const notifyTimer = window.setTimeout(() => {
+      // notify parent to advance (e.g., to fireworks)
+      try { onComplete(); } catch (e) { /* swallow */ }
+
+      // keep blackout a short time after notifying to ensure handoff
+      const releaseTimer = window.setTimeout(() => setBlackoutActive(false), CONFIG.POST_BLACKOUT_MS);
+      timersRef.current.push(releaseTimer);
+    }, holdMs);
+
+    timersRef.current.push(notifyTimer);
+  }, [appState.isComplete, onComplete, effectiveConfettiDuration]);
 
   // Tick the countdown and manage celebration effects
   useEffect(() => {
@@ -921,8 +942,9 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
         const pulseRemove = window.setTimeout(() => setScreenPulse(false), 500);
         timersRef.current.push(pulseRemove);
 
-        // floating heart near final seconds
-        if (secondsLeft <= 5) {
+  // floating heart near final seconds
+  const secondsLeft = Math.floor((difference / 1000) % 60);
+  if (secondsLeft <= 5) {
           const id = Date.now();
           const left = 50 + (Math.random() * 30 - 15);
           const top = 60 + (Math.random() * 10 - 5);
@@ -960,8 +982,8 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
 
   return (
   <section ref={sectionRef} className={`countdown-section relative min-h-screen py-24 px-6 overflow-hidden hardware-accelerated
-    ${appState.isComplete ? 'celebration-theme' : 'anticipation-theme'}
-    ${backgroundFlash ? 'reveal-bg-flash' : ''}`}>        {/* Animated gradient background */}
+    ${appState.isComplete ? 'celebration-theme' : 'anticipation-theme'}`}>
+    {/* Animated gradient background */}
         <div 
           className="absolute inset-0 -z-10" 
           style={{
@@ -1484,6 +1506,21 @@ const CountdownSection: React.FC<CountdownSectionProps> = ({ onComplete }) => {
         </motion.div>
         </LocalErrorBoundary>
       </div>
+
+      {/* Full-screen blackout overlay shown during handoff to fireworks */}
+      <AnimatePresence>
+        {blackoutActive && (
+          <motion.div
+            key="countdown-blackout"
+            className="absolute inset-0 z-50 pointer-events-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            style={{ background: '#000' }}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };

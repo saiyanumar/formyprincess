@@ -9,11 +9,10 @@ import WillYouBeMyWife from '@/components/WillYouBeMyWife';
 import CountdownSection from '@/components/CountdownSection';
 import DiarySection from '@/components/DiarySection';
 import OutroSection from '@/components/OutroSection';
-import BlackoutTransition from '@/components/BlackoutTransition';
 import AuthGate from '@/components/AuthGate';
 import { Analytics } from "@vercel/analytics/next"
 
-type Stage = 'countdown' | 'auth' | 'hero' | 'story' | 'letter' | 'diary' | 'proposal' | 'celebration' | 'outro';
+type Stage = 'countdown' | 'auth' | 'hero' | 'story' | 'letter' | 'diary' | 'proposal' | 'fireworks' | 'celebration' | 'outro';
 
 const pageVariants: any = {
   initial: {
@@ -42,9 +41,46 @@ const pageVariants: any = {
 };
 
 const Index = () => {
-  const [showBlackout, setShowBlackout] = useState(false);
-  const [showFireworks, setShowFireworks] = useState(false);
-  const [stage, setStage] = useState<Stage>('countdown');
+  // Flow: auth -> countdown -> fireworks -> hero -> ...
+  const [stage, setStage] = useState<Stage>('auth');
+  // Index-level blackout to smooth transitions between major stages (e.g., countdown -> fireworks)
+  const [indexBlackout, setIndexBlackout] = useState(false);
+  const [showFireworksContent, setShowFireworksContent] = useState(false);
+  const indexTimers = useRef<number[]>([]);
+
+  // When the stage becomes 'fireworks' we show a short blackout then reveal the fireworks content
+  useEffect(() => {
+    // clear any existing timers
+    indexTimers.current.forEach(t => clearTimeout(t));
+    indexTimers.current = [];
+
+    if (stage === 'fireworks') {
+      // start blackout immediately
+      setIndexBlackout(true);
+      setShowFireworksContent(false);
+
+      // after a short delay, render fireworks content
+      const revealTimer = window.setTimeout(() => {
+        setShowFireworksContent(true);
+      }, 1000);
+      indexTimers.current.push(revealTimer);
+
+      // ensure blackout is removed shortly after content is shown
+      const releaseTimer = window.setTimeout(() => {
+        setIndexBlackout(false);
+      }, 1400);
+      indexTimers.current.push(releaseTimer);
+    } else {
+      // ensure fireworks content is hidden when not in fireworks stage
+      setShowFireworksContent(false);
+      setIndexBlackout(false);
+    }
+
+    return () => {
+      indexTimers.current.forEach(t => clearTimeout(t));
+      indexTimers.current = [];
+    };
+  }, [stage]);
   
   const handleStageChange = (newStage: Stage) => {
     // First, scroll to top smoothly
@@ -80,55 +116,15 @@ const Index = () => {
   const startMusic = () => {
     if (audioRef.current && !isPlaying) {
       audioRef.current.play().catch(() => {
-        console.log('Audio playback failed');
+        // keep silent in prod builds; consider using a logger
       });
       setIsPlaying(true);
     }
   };
 
   const renderPage = () => {
-    if (stage === 'countdown') {
-      return (
-        <motion.div
-          key="countdown"
-          variants={pageVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          <CountdownSection 
-            onComplete={() => setStage('auth')}
-          />
-        </motion.div>
-      );
-    }
-    
+    // If user is not authenticated, show AuthGate first (FullScreenGate happens in main.tsx)
     if (!isAuthenticated) {
-      if (showBlackout) {
-        if (showFireworks) {
-          // Render the Diwali fireworks sequence; when it finishes, finalize auth and proceed
-          return (
-            <DiwaliFireworks
-              onComplete={() => {
-                setIsAuthenticated(true);
-                handleStageChange('hero');
-                startMusic();
-                setShowBlackout(false);
-                setShowFireworks(false);
-              }}
-            />
-          );
-        }
-
-        return (
-          <BlackoutTransition
-            onComplete={() => {
-              // After blackout, show the fireworks sequence
-              setShowFireworks(true);
-            }}
-          />
-        );
-      }
       return (
         <motion.div
           key="auth"
@@ -139,13 +135,32 @@ const Index = () => {
           className="min-h-screen"
         >
           <AuthGate 
-            onAuthenticated={() => setShowBlackout(true)}
+            onAuthenticated={() => {
+              setIsAuthenticated(true);
+              // proceed to countdown after successful auth
+              setStage('countdown');
+            }}
           />
         </motion.div>
       );
     }
 
     switch (stage) {
+      case 'countdown':
+        return (
+          <motion.div
+            key="countdown"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <CountdownSection
+              onComplete={() => setStage('fireworks')}
+            />
+          </motion.div>
+        );
+
       case 'hero':
         return (
           <motion.div
@@ -229,6 +244,39 @@ const Index = () => {
           </motion.div>
         );
 
+      case 'fireworks':
+        // We render the fireworks content only after a short blackout transition
+        if (!showFireworksContent) {
+          // render an empty container (blackout overlay will be visible at the root)
+          return (
+            <motion.div
+              key="fireworks"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            />
+          );
+        }
+
+        return (
+          <motion.div
+            key="fireworks"
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <DiwaliFireworks
+              onComplete={() => {
+                // start background music and continue to hero
+                startMusic();
+                handleStageChange('hero');
+              }}
+            />
+          </motion.div>
+        );
+
       case 'celebration':
         return (
           <motion.div
@@ -262,9 +310,24 @@ const Index = () => {
 
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-background overflow-hidden relative">
       <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
         {renderPage()}
+      </AnimatePresence>
+
+      {/* Index-level blackout overlay */}
+      <AnimatePresence>
+        {indexBlackout && (
+          <motion.div
+            key="index-blackout"
+            className="absolute inset-0 z-50 pointer-events-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ background: '#000' }}
+          />
+        )}
       </AnimatePresence>
     </div>
   );

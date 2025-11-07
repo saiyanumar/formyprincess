@@ -45,7 +45,7 @@ const stories: Story[] = [
     image: '/gallery/1.jpg',
     caption: 'The best moment of my life',
     date: 'Standing with you seems to be a dream come true😭❤️',
-    description: 'Standing with you seems to be a dream come true.',
+    description: 'In your arms, I have found my home.',
   },
   {
     id: 2,
@@ -177,16 +177,17 @@ const StoryGallery = ({ onContinue, onBack }: StoryGalleryProps) => {
               onClick={closeLightbox}
               variant="ghost"
               size="icon"
-              className="absolute top-6 right-6 text-white hover:text-rose-400 transition-colors z-10"
+              className="absolute top-6 right-6 z-50 bg-white text-rose-600 hover:bg-rose-50 shadow-lg p-2 rounded-full transition-colors"
             >
-              <X className="w-8 h-8" />
+              <X className="w-6 h-6" />
             </Button>
 
             <Button
               onClick={prevImage}
               variant="ghost"
               size="icon"
-              className="absolute left-6 text-white hover:text-rose-400 transition-colors z-10"
+              aria-label="Previous image"
+              className="hidden md:flex absolute left-6 top-1/2 transform -translate-y-1/2 z-50 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full shadow-lg transition-colors"
             >
               <ChevronLeft className="w-10 h-10" />
             </Button>
@@ -195,7 +196,8 @@ const StoryGallery = ({ onContinue, onBack }: StoryGalleryProps) => {
               onClick={nextImage}
               variant="ghost"
               size="icon"
-              className="absolute right-6 text-white hover:text-rose-400 transition-colors z-10"
+              aria-label="Next image"
+              className="hidden md:flex absolute right-6 top-1/2 transform -translate-y-1/2 z-50 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full shadow-lg transition-colors"
             >
               <ChevronRight className="w-10 h-10" />
             </Button>
