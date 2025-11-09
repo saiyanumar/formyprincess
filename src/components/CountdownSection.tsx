@@ -41,7 +41,7 @@ interface CountdownSectionProps {
 
 // Configuration and constants (centralized)
 const CONFIG = {
-  TARGET_DATE: new Date("November 09, 2025 19:03:00"),
+  TARGET_DATE: new Date("November 12, 2025 00:00:00"),
   COUNTDOWN_ALERT_THRESHOLD_MS: 11000,
   FINAL_COUNTDOWN_SECONDS: 11,
   HEARTS_ON_ALERT: 1,
